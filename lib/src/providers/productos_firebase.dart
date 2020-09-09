@@ -24,9 +24,17 @@ class ProductosFirebase{
      });*/
     return productos;
   }
-  Future<bool> agregarProductos(Map<String, dynamic> nuevoProducto, String categoria) async{
 
+  Future<bool> agregarProductos(Map<String, dynamic> nuevoProducto, String categoria) async{
     final resupuesta = await http.post("https://supermarket-9ebe8.firebaseio.com/categorias/$categoria.json", body: json.encode(nuevoProducto));
+  return true;
+  }
+  Future<bool> editarProducto (Map<String, dynamic> producto, String id)async{
+    final resupuesta = await http.put("https://supermarket-9ebe8.firebaseio.com/categorias/${producto['categoria']}/$id.json", body: json.encode(producto));
+  return true;
+  }
+  Future<bool> eliminarProducto (String categoria,String id)async{
+    final resupuesta = await http.delete("https://supermarket-9ebe8.firebaseio.com/categorias/$categoria/$id.json");
   return true;
   }
 }

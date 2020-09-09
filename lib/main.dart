@@ -9,8 +9,8 @@ void main() {
 class MyApp extends StatelessWidget {
   final Map<String, WidgetBuilder> routes = <String, WidgetBuilder> {
     //Login.route: (context)=> Login(),
-    Formulario_Page.route: (context)=> Formulario_Page(),
-    Home_page.route: (context)=> Home_page(),
+    FormularioPage.route: (context)=> FormularioPage(),
+    Homepage.route: (context)=> Homepage(),
   };
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: Home_page.route,
+      initialRoute: Homepage.route,
      routes: routes,
     );
   }

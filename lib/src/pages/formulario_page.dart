@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'package:supermarket/src/pages/home_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
+import 'package:supermarket/src/providers/categoria_providers.dart';
 import 'package:supermarket/src/utils/data.dart';
 
-class Formulario_Page extends StatefulWidget {
+class FormularioPage extends StatefulWidget {
   static final route = "formulario";
   @override
-  _Formulario_PageState createState() => _Formulario_PageState();
+  _FormularioPageState createState() => _FormularioPageState();
 }
 
-class _Formulario_PageState extends State<Formulario_Page> {
+class _FormularioPageState extends State<FormularioPage> {
   TextEditingController _nombreP = TextEditingController();
   TextEditingController _precioP = TextEditingController();
   TextEditingController _cantidadP = TextEditingController();
   Map<String, dynamic> nuevoProducto = {};
   String _selectedCategoria = "Frutas y verduras";
+  String helperTextI="";
 
   @override
   void initState() {
@@ -102,6 +105,11 @@ class _Formulario_PageState extends State<Formulario_Page> {
             child: Icon(Icons.check),
             onPressed: () {
               _subirProducto();
+              Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(
+            builder: (BuildContext context){
+              return new HomepageState().build(context);
+           }));
              /* if (_validarCampos()) {
                 buscarUsuario();
               }*/
@@ -111,37 +119,35 @@ class _Formulario_PageState extends State<Formulario_Page> {
       ),
     );
   }
+  
+
+
   onChangeDropdown(String selectedCategoria){
     setState(() {
       _selectedCategoria = selectedCategoria;
     });
   }
+  
   List<DropdownMenuItem<String>> _listaCategorias(){
     List<DropdownMenuItem<String>> items = List();
-    items.add(
+    List<String> catP = Categoriaproviders().categorias;
+    catP.forEach((element) { 
+      items.add(
       DropdownMenuItem(
-        value: "Frutas y verduras",
-        child: Text("Frutas y verduras",
+        value: element,
+        child: Text(element,
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.blue),
         ),
       )
     );
-    items.add(
-      DropdownMenuItem(
-        value: "Lacteos",
-        child: Text("Lacteos",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.blue
-                      ),
-                      
-                      ),
-      )
-    );
+    });
+    
+   
     return items;
   }
+  
   Widget _crearInput(
       {TextEditingController controller, String name, String placeholder, TextInputType kType}) {
     return Padding(
@@ -155,7 +161,7 @@ class _Formulario_PageState extends State<Formulario_Page> {
             hintText: placeholder,
             suffixIcon: Icon(Icons.account_circle),
             icon: Icon(Icons.people),
-            //helperText: helperTextU,
+            helperText: helperTextI,
             helperStyle: TextStyle(fontSize: 13.5, color: Colors.red)),
         onChanged: (value) => _guardarDatos(),
       ),
@@ -197,8 +203,8 @@ class _Formulario_PageState extends State<Formulario_Page> {
   
   void _subirProducto(){
     nuevoProducto['nombre']=_nombreP.text;
-    nuevoProducto['precio']=_precioP.text;
-    nuevoProducto['cantidad']=_cantidadP.text;
+    nuevoProducto['precio']=int.parse(_precioP.text);
+    nuevoProducto['cantidad']=int.parse(_cantidadP.text);
     nuevoProducto['categoria']=_selectedCategoria;
     ProductosFirebase().agregarProductos(nuevoProducto, _selectedCategoria);
   }

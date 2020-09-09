@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/pages/home_page.dart';
+import 'package:supermarket/src/providers/productos_firebase.dart';
 
 class ProductoCard extends StatefulWidget {
   static String route = "/Producto";
@@ -7,12 +9,14 @@ class ProductoCard extends StatefulWidget {
   int cantidadA;
   int preciox1A;
   int precioTotalProductoA;
-   ProductoCard({String nombreA, int cantidadA, int precioTotalProductoA, int preciox1A, String categoriaA}) {
+  String id;
+   ProductoCard({String nombreA, int cantidadA, int precioTotalProductoA, int preciox1A, String categoriaA,String id}) {
     this.nombreA = nombreA;
     this.cantidadA = cantidadA;
     this.preciox1A =preciox1A;
     this.precioTotalProductoA=precioTotalProductoA;
     this.categoriaA =categoriaA;
+    this.id=id;
   }
   /*Map toJson() => {
         "nombre":nombre,
@@ -30,6 +34,7 @@ class _ProductoCard extends State<ProductoCard> {
   int _preciox1A;
   int _precioTotalProductoA;
   String _categoriaA;
+  String _id;
   @override
   void initState(){
     _nombreA =widget.nombreA;
@@ -37,6 +42,7 @@ class _ProductoCard extends State<ProductoCard> {
     _preciox1A = widget.preciox1A;
     _precioTotalProductoA = widget.precioTotalProductoA;
     _categoriaA=widget.categoriaA;
+    _id=widget.id;
   }
   
   @override
@@ -72,8 +78,15 @@ class _ProductoCard extends State<ProductoCard> {
                         _cantidadA = 1;
                         _precioTotalProductoA=_preciox1A;
                       }
-                      
-                      //listaA.setState(() {print("press"); });
+                      else{
+                         Map<String,dynamic> prodMap ={
+                          "nombre": _nombreA,
+                          "cantidad":_cantidadA,
+                          "precio":_preciox1A,
+                          "categoria":_categoriaA
+                        };
+                        ProductosFirebase().editarProducto(prodMap, _id);
+                      }
                       setState(() {});
                     },
                   ),
@@ -82,12 +95,18 @@ class _ProductoCard extends State<ProductoCard> {
                     color: Colors.blue,
                     tooltip: 'Aumentar en 1 la cantidad de producto',
                     onPressed: () {
-                      
-                      //listaA.setState(() { });
                       setState(() {
                       _cantidadA++;
                       _precioTotalProductoA = _preciox1A+_precioTotalProductoA;
-                      print(_cantidadA);
+                      
+                         Map<String,dynamic> prodMap ={
+                          "nombre": _nombreA,
+                          "cantidad":_cantidadA,
+                          "precio":_preciox1A,
+                          "categoria":_categoriaA
+                        };
+                        ProductosFirebase().editarProducto(prodMap, _id);
+                      
                       });
                     },
                   ),
@@ -96,9 +115,12 @@ class _ProductoCard extends State<ProductoCard> {
                     color: Colors.red,
                     tooltip: 'Borrar articulo',
                     onPressed: () {
-                      //proLista.eliminarProducto(nombreA);
-                      
-                      //listaA.setState(() { });
+                      ProductosFirebase().eliminarProducto(_categoriaA, _id);
+                      Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(
+            builder: (BuildContext context){
+              return new HomepageState().build(context);
+           }));
                     },
                   ),
                 ],

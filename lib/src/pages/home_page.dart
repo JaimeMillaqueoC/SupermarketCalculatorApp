@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/pages/formulario_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
 import 'package:supermarket/src/providers/categoria_providers.dart';
 import 'package:supermarket/src/mywidgets/producto_Card.dart';
 
-class Home_page extends StatefulWidget {
+class Homepage extends StatefulWidget {
   static final route = "Home_page";
   @override
-  Home_pageState createState() => Home_pageState();
+  HomepageState createState() => HomepageState();
 }
-class Home_pageState extends State<Home_page> {
+class HomepageState extends State<Homepage> {
   int _carritoTotal=0;
   @override
   void initState() {
@@ -57,8 +58,7 @@ class Home_pageState extends State<Home_page> {
               FloatingActionButton(
 
                 onPressed: ()  {
-                 /*Navigator.pushNamed(context, Formulario.nombrePagina,
-                      arguments: this);*/
+                 Navigator.pushNamed(context, FormularioPage.route);
                       
                 },
                 child: Icon(Icons.add_shopping_cart),
@@ -68,21 +68,36 @@ class Home_pageState extends State<Home_page> {
         );
   }
   List<ProductoCard> _crearItem(BuildContext context, List<Map<String, dynamic>> productosP){
-    List<String> categorias =Categoria_providers().categorias;
+    List<String> categorias =Categoriaproviders().categorias;
     List<Map<String,dynamic>> productosCat =[];
     List<ProductoCard> _listaCard = [];
     productosP.forEach((element) {
       for(String cat in categorias){
-        productosCat.add(element[cat]);
+        if(existCategoria(cat, element)){
+          productosCat.add(element[cat]);
+        }
       }
       });
       productosCat.forEach((element) {element.forEach((key, value) {
         //SET CARD HERE!
         int precioTotalProductoC = value['cantidad']*value['precio'];
-        _listaCard.add(ProductoCard(nombreA: value['nombre'], cantidadA: value['cantidad'],preciox1A: value['precio'],precioTotalProductoA: precioTotalProductoC, categoriaA:  value['categoria']));
+        _listaCard.add(ProductoCard(nombreA: value['nombre'], cantidadA: value['cantidad'],preciox1A: value['precio'],precioTotalProductoA: precioTotalProductoC, categoriaA:  value['categoria'], id: key,));
         });});
       return _listaCard;
   }
-
+  bool existCategoria(String cat, Map<String,dynamic> element){
+    List<dynamic> aux=[];
+    try{
+          aux.add(element[cat]);
+        }
+        catch (e){
+        }
+    if(aux[0]==null){
+      return false;
+    }else{
+      return true;
+    }
+    
+  }
 
 }
