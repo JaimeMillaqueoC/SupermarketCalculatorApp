@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/pages/home_page.dart';
+import 'package:supermarket/src/pages/formulario_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
 
 class ProductoCard extends StatefulWidget {
@@ -50,7 +51,15 @@ class _ProductoCard extends State<ProductoCard> {
     return Card(
       child: InkWell(
           onTap: () {
-           
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FormularioPage(
+                        nombreA: _nombreA,
+                        cantidadA: _cantidadA,
+                        preciox1A: _preciox1A,
+                        categoriaA: _categoriaA,
+                        id:_id,
+                        edit: true,
+            )));
+
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -115,12 +124,12 @@ class _ProductoCard extends State<ProductoCard> {
                     color: Colors.red,
                     tooltip: 'Borrar articulo',
                     onPressed: () {
-                      ProductosFirebase().eliminarProducto(_categoriaA, _id);
-                      Navigator.of(context).pushReplacement(
+                      ProductosFirebase().eliminarProducto(_categoriaA, _id).then((value) => Navigator.of(context).pushReplacement(
             new MaterialPageRoute(
             builder: (BuildContext context){
               return new HomepageState().build(context);
-           }));
+           })));
+                      
                     },
                   ),
                 ],

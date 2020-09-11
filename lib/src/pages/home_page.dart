@@ -67,25 +67,49 @@ class HomepageState extends State<Homepage> {
           ),floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
   }
-  List<ProductoCard> _crearItem(BuildContext context, List<Map<String, dynamic>> productosP){
+  List<Widget> _crearItem(BuildContext context, List<Map<String, dynamic>> productosP){
+    ListView(
+
+    );
     List<String> categorias =Categoriaproviders().categorias;
     List<Map<String,dynamic>> productosCat =[];
-    List<ProductoCard> _listaCard = [];
+    List<Widget> _listaCard = [ ];
+    List<String> categoriasEncontradas=[];
     productosP.forEach((element) {
       for(String cat in categorias){
-        if(existCategoria(cat, element)){
+        if(_existCategoria(cat, element)){
           productosCat.add(element[cat]);
+          categoriasEncontradas.add(cat);
         }
       }
       });
-      productosCat.forEach((element) {element.forEach((key, value) {
+      int index = 0;
+      productosCat.forEach((element) {
+        _listaCard.add(
+          Container(
+            color: Colors.green[200],
+            child: ListTile(
+                title: Text(
+                  "${categoriasEncontradas.elementAt(index++)}",
+                  style: TextStyle(fontSize: 22.0,
+                  ),
+                ),
+                subtitle: Text(
+                  "Tiene: ${element.length} productos",
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+          ),
+        );
+        element.forEach((key, value) {
         //SET CARD HERE!
         int precioTotalProductoC = value['cantidad']*value['precio'];
         _listaCard.add(ProductoCard(nombreA: value['nombre'], cantidadA: value['cantidad'],preciox1A: value['precio'],precioTotalProductoA: precioTotalProductoC, categoriaA:  value['categoria'], id: key,));
-        });});
+          });
+        });
       return _listaCard;
   }
-  bool existCategoria(String cat, Map<String,dynamic> element){
+  bool _existCategoria(String cat, Map<String,dynamic> element){
     List<dynamic> aux=[];
     try{
           aux.add(element[cat]);
