@@ -43,9 +43,8 @@ class DrawerPage extends StatelessWidget {
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
         decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage('assets/img/bg_drawerheader.jpg'))),
+          color: Colors.red,
+        ),
         child: Stack(
           children: <Widget>[
             Positioned(

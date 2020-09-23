@@ -22,8 +22,9 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Text("Carrito"),
+        title: Text("Pedido actual"),
       ),
       drawer: DrawerPage(),
       body: FutureBuilder(
@@ -32,6 +33,7 @@ class HomepageState extends State<Homepage> {
           if (respuesta.hasData) {
             return respuesta.data.isNotEmpty
                 ? ListView(
+                    padding: EdgeInsets.all(10.0),
                     children: _crearItem(context, respuesta.data),
                   )
                 : Center(
@@ -42,7 +44,44 @@ class HomepageState extends State<Homepage> {
           }
         },
       ),
-      floatingActionButton: Row(
+      bottomNavigationBar: new Container(
+        height: 80.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+          color: Colors.red,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(Icons.receipt, color: Colors.white),
+            Text("$_carritoTotal",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold)),
+            RaisedButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(width: 20, height: 0),
+                  Text("AGREGAR",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Container(width: 20, height: 0),
+                ],
+              ),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.red)),
+              onPressed: () {
+                Navigator.pushNamed(context, FormularioPage.route);
+              },
+            )
+          ],
+        ),
+      ),
+      /* floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
@@ -56,7 +95,7 @@ class HomepageState extends State<Homepage> {
             child: Icon(Icons.add_shopping_cart),
           ),
         ],
-      ),
+      ), */
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -79,17 +118,18 @@ class HomepageState extends State<Homepage> {
     productosCat.forEach((element) {
       _listaCard.add(
         Container(
-          color: Colors.green[200],
+          color: Colors.grey[600],
           child: ListTile(
             title: Text(
               "${categoriasEncontradas.elementAt(index++)}",
               style: TextStyle(
-                fontSize: 22.0,
-              ),
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              "Tiene: ${element.length} productos",
-              style: TextStyle(fontSize: 18.0),
+              "${element.length} productos",
+              style: TextStyle(fontSize: 16.0, color: Colors.black87),
             ),
           ),
         ),
