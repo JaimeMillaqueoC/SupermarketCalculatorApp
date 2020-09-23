@@ -118,7 +118,7 @@ class HomepageState extends State<Homepage> {
     productosCat.forEach((element) {
       _listaCard.add(
         Container(
-          color: Colors.grey[600],
+          color: Colors.grey[500],
           child: ListTile(
             title: Text(
               "${categoriasEncontradas.elementAt(index++)}",

@@ -22,8 +22,7 @@ class FormularioPage extends StatefulWidget {
       String categoriaA,
       String id,
       bool edit: false,
-      bool lista:false
-      }) {
+      bool lista: false}) {
     this.nombreA = nombreA;
     this.cantidadA = cantidadA;
     this.preciox1A = preciox1A;
@@ -104,16 +103,15 @@ class _FormularioPageState extends State<FormularioPage> {
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _generarCategoria(crear:_lista),
+              children: _generarCategoria(crear: _lista),
             ),
           ),
           Divider(),
           _crearInput(
-            controller: _nombreP,
-            name: 'Nombre producto',
-            placeholder: 'Ingrese el nombre del producto',
-            crear: false
-          ),
+              controller: _nombreP,
+              name: 'Nombre producto',
+              placeholder: 'Ingrese el nombre del producto',
+              crear: false),
           Divider(),
           _crearInput(
               controller: _precioP,
@@ -144,28 +142,28 @@ class _FormularioPageState extends State<FormularioPage> {
                   "precio": int.parse(_precioP.text),
                   "categoria": _selectedCategoria
                 };
-                ProductosFirebase().eliminarProducto(_categoriaA, _id).then((value) => ProductosFirebase().editarProducto(prodMap, _id).then((value) =>
-                    {
-                      Navigator.of(context).pushNamedAndRemoveUntil(Homepage.route, (Route<dynamic> route) => false)
-                    }));
-                
+                ProductosFirebase().eliminarProducto(_categoriaA, _id).then(
+                    (value) => ProductosFirebase()
+                        .editarProducto(prodMap, _id)
+                        .then((value) => {
+                              Navigator.of(context).pop(),
+                              /* Navigator.of(context).pushNamedAndRemoveUntil(Homepage.route, (Route<dynamic> route) => false) */
+                            }));
               }
-              if(_lista){
-                 Map<String, dynamic> prodMap = {
-                  "nombre": _nombreP.text,};
-                  Navigator.of(context).pushNamedAndRemoveUntil(ListaPreviaPage.route, (Route<dynamic> route) => false);
-                  /*Navigator.of(context).pushReplacement(
+              if (_lista) {
+                Map<String, dynamic> prodMap = {
+                  "nombre": _nombreP.text,
+                };
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    ListaPreviaPage.route, (Route<dynamic> route) => false);
+                /*Navigator.of(context).pushReplacement(
                         new MaterialPageRoute(builder: (BuildContext context) {
                       return new ListaPreviaPageState().build(context);
                     }));*/
               }
-              
-               if(!_edit && !_lista) {
-                _subirProducto().then((value) => Navigator.of(context).pushReplacement(
-                    new MaterialPageRoute(builder: (BuildContext context) {
-                  return new HomepageState().build(context);
-                })));
-                
+
+              if (!_edit && !_lista) {
+                _subirProducto().then((value) => Navigator.of(context).pop());
               }
 
               /* if (_validarCampos()) {
@@ -178,18 +176,20 @@ class _FormularioPageState extends State<FormularioPage> {
     );
   }
 
-  List<Widget> _generarCategoria({bool crear}){
-    List<Widget> aux=[];
-    if(!crear){
-      aux= [Text(
-                  "Seleccione Categoria: ",
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                DropdownButton(
-                  value: _selectedCategoria,
-                  items: _listaCategorias(),
-                  onChanged: onChangeDropdown,
-                ),];
+  List<Widget> _generarCategoria({bool crear}) {
+    List<Widget> aux = [];
+    if (!crear) {
+      aux = [
+        Text(
+          "Seleccione Categoria: ",
+          style: TextStyle(fontSize: 18.0),
+        ),
+        DropdownButton(
+          value: _selectedCategoria,
+          items: _listaCategorias(),
+          onChanged: onChangeDropdown,
+        ),
+      ];
     }
     return aux;
   }
@@ -197,9 +197,11 @@ class _FormularioPageState extends State<FormularioPage> {
   String _tituloPagina() {
     if (_edit) {
       return "Edite el producto";
-    } if(!_edit && !_lista) {
+    }
+    if (!_edit && !_lista) {
       return "Agregue al carrito";
-    }if(_lista){
+    }
+    if (_lista) {
       return "Agregue a lista previa";
     }
   }
@@ -232,28 +234,26 @@ class _FormularioPageState extends State<FormularioPage> {
       String placeholder,
       TextInputType kType,
       bool crear}) {
-        if(!crear){
-          return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: TextField(
-        keyboardType: kType,
-        controller: controller,
-        decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: name,
-            hintText: placeholder,
-            suffixIcon: Icon(Icons.account_circle),
-            icon: Icon(Icons.people),
-            helperText: helperTextI,
-            helperStyle: TextStyle(fontSize: 13.5, color: Colors.red)),
-        onChanged: (value) => _guardarDatos(),
-      ),
-    );
-        }
-        else{
-          return Container();
-        }
-    
+    if (!crear) {
+      return Padding(
+        padding: EdgeInsets.all(10.0),
+        child: TextField(
+          keyboardType: kType,
+          controller: controller,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: name,
+              hintText: placeholder,
+              suffixIcon: Icon(Icons.account_circle),
+              icon: Icon(Icons.people),
+              helperText: helperTextI,
+              helperStyle: TextStyle(fontSize: 13.5, color: Colors.red)),
+          onChanged: (value) => _guardarDatos(),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   Future<void> _loadDataSelectedCard() {
@@ -297,11 +297,12 @@ class _FormularioPageState extends State<FormularioPage> {
     setState(() {});
   }
 
-  Future<void> _subirProducto() async{
+  Future<void> _subirProducto() async {
     nuevoProducto['nombre'] = _nombreP.text;
     nuevoProducto['precio'] = int.parse(_precioP.text);
     nuevoProducto['cantidad'] = int.parse(_cantidadP.text);
     nuevoProducto['categoria'] = _selectedCategoria;
-    bool resp = await ProductosFirebase().agregarProductos(nuevoProducto, _selectedCategoria);
+    bool resp = await ProductosFirebase()
+        .agregarProductos(nuevoProducto, _selectedCategoria);
   }
 }
