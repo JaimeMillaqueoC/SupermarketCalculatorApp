@@ -12,16 +12,9 @@ class ProductosFirebase{
   }
   Future<List<Map<String, dynamic>>> get productos async{
     List<Map<String, dynamic>> productos =[];
- 
     final resupuesta = await http.get("https://supermarket-9ebe8.firebaseio.com/.json");
     Map<String, dynamic> datos = jsonDecode(resupuesta.body);
-    //print(datos['categorias']);
     productos.add(datos['categorias']);
-    //print(productos);
-    /*datos.forEach((indice, contenido) {
-      contenido['id']=indice;
-      productos.add(contenido);
-     });*/
     return productos;
   }
 
@@ -35,6 +28,10 @@ class ProductosFirebase{
   }
   Future<bool> eliminarProducto (String categoria,String id)async{
     final resupuesta = await http.delete("https://supermarket-9ebe8.firebaseio.com/categorias/$categoria/$id.json");
+  return true;
+  }
+  Future<bool> agregarProductosPrevios(Map<String, dynamic> nuevoProducto) async{
+    final resupuesta = await http.post("https://supermarket-9ebe8.firebaseio.com/ListaPrevia.json", body: json.encode(nuevoProducto));
   return true;
   }
 }

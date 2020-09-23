@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/pages/formulario_page.dart';
+import 'package:supermarket/src/pages/drawer_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
 import 'package:supermarket/src/providers/categoria_providers.dart';
 import 'package:supermarket/src/mywidgets/producto_Card.dart';
@@ -25,6 +26,7 @@ class HomepageState extends State<Homepage> {
         appBar: AppBar(
           title: Text("Carrito"),
         ),
+        drawer: DrawerPage() ,
         body: FutureBuilder(
           future: ProductosFirebase().productos,
           builder: (BuildContext contexto, AsyncSnapshot respuesta){
@@ -42,6 +44,7 @@ class HomepageState extends State<Homepage> {
           },
 
           ),
+          
         floatingActionButton:
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -68,9 +71,6 @@ class HomepageState extends State<Homepage> {
         );
   }
   List<Widget> _crearItem(BuildContext context, List<Map<String, dynamic>> productosP){
-    ListView(
-
-    );
     List<String> categorias =Categoriaproviders().categorias;
     List<Map<String,dynamic>> productosCat =[];
     List<Widget> _listaCard = [ ];
@@ -104,13 +104,15 @@ class HomepageState extends State<Homepage> {
         element.forEach((key, value) {
         //SET CARD HERE!
         int precioTotalProductoC = value['cantidad']*value['precio'];
+        _carritoTotal+=precioTotalProductoC;
         _listaCard.add(ProductoCard(nombreA: value['nombre'], cantidadA: value['cantidad'],preciox1A: value['precio'],precioTotalProductoA: precioTotalProductoC, categoriaA:  value['categoria'], id: key,));
           });
+
         });
       return _listaCard;
   }
   bool _existCategoria(String cat, Map<String,dynamic> element){
-    List<dynamic> aux=[];
+    List<dynamic> aux=[]; 
     try{
           aux.add(element[cat]);
         }

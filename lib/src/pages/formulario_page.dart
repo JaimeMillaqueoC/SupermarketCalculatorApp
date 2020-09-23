@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:supermarket/src/pages/home_page.dart';
+import 'package:supermarket/src/pages/listaPrevia_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
 import 'package:supermarket/src/providers/categoria_providers.dart';
 import 'package:supermarket/src/utils/data.dart';
@@ -13,19 +14,23 @@ class FormularioPage extends StatefulWidget {
   int preciox1A;
   String id;
   bool edit;
+  bool lista;
   FormularioPage(
       {String nombreA,
       int cantidadA,
       int preciox1A,
       String categoriaA,
       String id,
-      bool edit: false}) {
+      bool edit: false,
+      bool lista:false
+      }) {
     this.nombreA = nombreA;
     this.cantidadA = cantidadA;
     this.preciox1A = preciox1A;
     this.categoriaA = categoriaA;
     this.id = id;
     this.edit = edit;
+    this.lista = lista;
   }
   @override
   _FormularioPageState createState() => _FormularioPageState();
@@ -45,10 +50,12 @@ class _FormularioPageState extends State<FormularioPage> {
   String _categoriaA;
   String _id;
   bool _edit;
+  bool _lista;
   @override
   void initState() {
     super.initState();
     _edit = widget.edit;
+    _lista = widget.lista;
     if (widget.edit) {
       _nombreA = widget.nombreA;
       _cantidadA = widget.cantidadA;
@@ -97,17 +104,7 @@ class _FormularioPageState extends State<FormularioPage> {
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Seleccione Categoria: ",
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                DropdownButton(
-                  value: _selectedCategoria,
-                  items: _listaCategorias(),
-                  onChanged: onChangeDropdown,
-                ),
-              ],
+              children: _generarCategoria(crear:_lista),
             ),
           ),
           Divider(),
@@ -115,19 +112,22 @@ class _FormularioPageState extends State<FormularioPage> {
             controller: _nombreP,
             name: 'Nombre producto',
             placeholder: 'Ingrese el nombre del producto',
+            crear: false
           ),
           Divider(),
           _crearInput(
               controller: _precioP,
               name: 'Precio producto',
               placeholder: 'Ingrese el precio del producto',
-              kType: TextInputType.number),
+              kType: TextInputType.number,
+              crear: _lista),
           Divider(),
           _crearInput(
               controller: _cantidadP,
               name: 'Cantidad producto',
               placeholder: 'Ingrese cuantos son',
-              kType: TextInputType.number),
+              kType: TextInputType.number,
+              crear: _lista),
           Divider(),
         ],
       ),
@@ -145,12 +145,22 @@ class _FormularioPageState extends State<FormularioPage> {
                   "categoria": _selectedCategoria
                 };
                 ProductosFirebase().eliminarProducto(_categoriaA, _id).then((value) => ProductosFirebase().editarProducto(prodMap, _id).then((value) =>
-                    Navigator.of(context).pushReplacement(
-                        new MaterialPageRoute(builder: (BuildContext context) {
-                      return new HomepageState().build(context);
-                    }))));
+                    {
+                      Navigator.of(context).pushNamedAndRemoveUntil(Homepage.route, (Route<dynamic> route) => false)
+                    }));
                 
-              } else {
+              }
+              if(_lista){
+                 Map<String, dynamic> prodMap = {
+                  "nombre": _nombreP.text,};
+                  Navigator.of(context).pushNamedAndRemoveUntil(ListaPreviaPage.route, (Route<dynamic> route) => false);
+                  /*Navigator.of(context).pushReplacement(
+                        new MaterialPageRoute(builder: (BuildContext context) {
+                      return new ListaPreviaPageState().build(context);
+                    }));*/
+              }
+              
+               if(!_edit && !_lista) {
                 _subirProducto().then((value) => Navigator.of(context).pushReplacement(
                     new MaterialPageRoute(builder: (BuildContext context) {
                   return new HomepageState().build(context);
@@ -168,11 +178,29 @@ class _FormularioPageState extends State<FormularioPage> {
     );
   }
 
+  List<Widget> _generarCategoria({bool crear}){
+    List<Widget> aux=[];
+    if(!crear){
+      aux= [Text(
+                  "Seleccione Categoria: ",
+                  style: TextStyle(fontSize: 18.0),
+                ),
+                DropdownButton(
+                  value: _selectedCategoria,
+                  items: _listaCategorias(),
+                  onChanged: onChangeDropdown,
+                ),];
+    }
+    return aux;
+  }
+
   String _tituloPagina() {
     if (_edit) {
       return "Edite el producto";
-    } else {
+    } if(!_edit && !_lista) {
       return "Agregue al carrito";
+    }if(_lista){
+      return "Agregue a lista previa";
     }
   }
 
@@ -202,8 +230,10 @@ class _FormularioPageState extends State<FormularioPage> {
       {TextEditingController controller,
       String name,
       String placeholder,
-      TextInputType kType}) {
-    return Padding(
+      TextInputType kType,
+      bool crear}) {
+        if(!crear){
+          return Padding(
       padding: EdgeInsets.all(10.0),
       child: TextField(
         keyboardType: kType,
@@ -219,6 +249,11 @@ class _FormularioPageState extends State<FormularioPage> {
         onChanged: (value) => _guardarDatos(),
       ),
     );
+        }
+        else{
+          return Container();
+        }
+    
   }
 
   Future<void> _loadDataSelectedCard() {

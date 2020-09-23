@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/pages/formulario_page.dart';
 import 'package:supermarket/src/pages/home_page.dart';
+import 'package:supermarket/src/pages/listaPrevia_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
     //Login.route: (context)=> Login(),
     FormularioPage.route: (context)=> FormularioPage(),
     Homepage.route: (context)=> Homepage(),
+    ListaPreviaPage.route: (context)=> ListaPreviaPage(),
   };
   @override
   Widget build(BuildContext context) {
