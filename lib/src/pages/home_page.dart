@@ -25,6 +25,7 @@ class HomepageState extends State<Homepage> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text("Pedido actual"),
+        backgroundColor: Colors.blue,
       ),
       drawer: DrawerPage(),
       body: FutureBuilder(
@@ -49,7 +50,7 @@ class HomepageState extends State<Homepage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-          color: Colors.red,
+          color: Colors.blue,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,8 +73,8 @@ class HomepageState extends State<Homepage> {
               ),
               color: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.red)),
+                borderRadius: BorderRadius.circular(18.0),
+              ),
               onPressed: () {
                 Navigator.pushNamed(context, FormularioPage.route);
               },
@@ -118,7 +119,7 @@ class HomepageState extends State<Homepage> {
     productosCat.forEach((element) {
       _listaCard.add(
         Container(
-          color: Colors.grey[500],
+          color: Colors.green[500],
           child: ListTile(
             title: Text(
               "${categoriasEncontradas.elementAt(index++)}",
@@ -129,7 +130,9 @@ class HomepageState extends State<Homepage> {
             ),
             subtitle: Text(
               "${element.length} productos",
-              style: TextStyle(fontSize: 16.0, color: Colors.black87),
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
             ),
           ),
         ),
