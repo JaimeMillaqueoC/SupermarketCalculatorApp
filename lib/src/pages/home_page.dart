@@ -82,21 +82,6 @@ class HomepageState extends State<Homepage> {
           ],
         ),
       ),
-      /* floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            "Total: $_carritoTotal",
-            style: TextStyle(color: Colors.deepOrange, fontSize: 30.0),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, FormularioPage.route);
-            },
-            child: Icon(Icons.add_shopping_cart),
-          ),
-        ],
-      ), */
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
