@@ -1,9 +1,15 @@
+//import 'dart:html';
+
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/pages/formulario_page.dart';
 import 'package:supermarket/src/pages/drawer_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
 import 'package:supermarket/src/providers/categoria_providers.dart';
 import 'package:supermarket/src/mywidgets/producto_Card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:firebase_core/firebase_core.dart';
 
 class Homepage extends StatefulWidget {
   static final route = "Home_page";
@@ -19,6 +25,29 @@ class HomepageState extends State<Homepage> {
     //ProductosFirebase().productos;
   }
 
+  List<Widget> items(AsyncSnapshot snapshot){
+    //pruebas filtrando por categoria
+    FirebaseFirestore.instance
+  .collection('productos')
+  .where('categoria', isEqualTo: "Frutas y verduras")
+  .get().then((value) {
+    value.docs.forEach((element) {print(element['nombre']); });
+  } );
+  //Fin pruebas--------------------------------------------------------
+  //cargar DB en cards
+ 
+    return snapshot.data.documents.map<Widget>((document){
+      int precioTotalProductoC = document['cantidad'] * document['precio'];
+      return ProductoCard(
+        nombreA: document['nombre'],
+        cantidadA:  document['cantidad'],
+        categoriaA:  document['categoria'],
+        preciox1A:  document['precio'],
+        precioTotalProductoA: precioTotalProductoC,
+      );
+    }).toList();
+  }
+  CollectionReference prod = FirebaseFirestore.instance.collection('productos');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +57,23 @@ class HomepageState extends State<Homepage> {
         backgroundColor: Colors.blue,
       ),
       drawer: DrawerPage(),
-      body: FutureBuilder(
+      body: Container(
+        child:StreamBuilder(
+          stream: prod.snapshots(),
+          builder: (context,snapshot){
+            if (snapshot.connectionState == ConnectionState.active) {
+              return ListView(
+                children: items(snapshot),
+              );
+            }else{
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+          ),
+        
+        ),
+      
+      /*FutureBuilder(
         future: ProductosFirebase().productos,
         builder: (BuildContext contexto, AsyncSnapshot respuesta) {
           if (respuesta.hasData) {
@@ -44,7 +89,7 @@ class HomepageState extends State<Homepage> {
             return Center(child: CircularProgressIndicator());
           }
         },
-      ),
+      ),*/
       bottomNavigationBar: new Container(
         height: 80.0,
         decoration: BoxDecoration(
@@ -61,6 +106,26 @@ class HomepageState extends State<Homepage> {
                     color: Colors.white,
                     fontSize: 22,
                     fontWeight: FontWeight.bold)),
+            RaisedButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(width: 20, height: 0),
+                  Text("setstate",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Container(width: 20, height: 0),
+                ],
+              ),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              ),
+              onPressed: () {
+                setState(() {
+                  
+                });
+              },
+            ),
             RaisedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
