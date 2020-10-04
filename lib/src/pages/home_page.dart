@@ -24,7 +24,11 @@ class HomepageState extends State<Homepage> {
     super.initState();
     //ProductosFirebase().productos;
   }
-
+  void stated(){
+    setState(() {
+      
+    });
+  }
   List<Widget> items(AsyncSnapshot snapshot){
     //pruebas filtrando por categoria
     FirebaseFirestore.instance
@@ -141,7 +145,12 @@ class HomepageState extends State<Homepage> {
                 borderRadius: BorderRadius.circular(18.0),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, FormularioPage.route);
+                Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => FormularioPage(
+                      edit: false,
+                      home: this,
+                    )));
+                //Navigator.pushNamed(context, FormularioPage.route);
               },
             )
           ],
