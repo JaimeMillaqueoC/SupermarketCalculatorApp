@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:supermarket/src/pages/home_page.dart';
+import 'package:supermarket/src/providers/productos_cloud.dart';
 import 'package:supermarket/src/pages/listaPrevia_page.dart';
 import 'package:supermarket/src/providers/productos_firebase.dart';
 import 'package:supermarket/src/providers/categoria_providers.dart';
@@ -15,6 +16,7 @@ class FormularioPage extends StatefulWidget {
   String id;
   bool edit;
   bool lista;
+  HomepageState home;
   FormularioPage(
       {String nombreA,
       int cantidadA,
@@ -22,7 +24,8 @@ class FormularioPage extends StatefulWidget {
       String categoriaA,
       String id,
       bool edit: false,
-      bool lista: false}) {
+      bool lista: false,
+      HomepageState home}) {
     this.nombreA = nombreA;
     this.cantidadA = cantidadA;
     this.preciox1A = preciox1A;
@@ -30,6 +33,7 @@ class FormularioPage extends StatefulWidget {
     this.id = id;
     this.edit = edit;
     this.lista = lista;
+    this.home = home;
   }
   @override
   _FormularioPageState createState() => _FormularioPageState();
@@ -50,11 +54,13 @@ class _FormularioPageState extends State<FormularioPage> {
   String _id;
   bool _edit;
   bool _lista;
+  HomepageState _home;
   @override
   void initState() {
     super.initState();
     _edit = widget.edit;
     _lista = widget.lista;
+    _home = widget.home;
     if (widget.edit) {
       _nombreA = widget.nombreA;
       _cantidadA = widget.cantidadA;
@@ -163,7 +169,16 @@ class _FormularioPageState extends State<FormularioPage> {
               }
 
               if (!_edit && !_lista) {
-                _subirProducto().then((value) => Navigator.of(context).pop());
+                nuevoProducto['nombre'] = _nombreP.text;
+                nuevoProducto['precio'] = int.parse(_precioP.text);
+                nuevoProducto['cantidad'] = int.parse(_cantidadP.text);
+                nuevoProducto['categoria'] = _selectedCategoria;
+                ProductosCloud().addProductos(nuevoProducto).then((value) {
+                  _home.setState(() {});
+                  Navigator.of(context).pop();
+                });
+
+                //_subirProducto().then((value) => Navigator.of(context).pop());
               }
 
               /* if (_validarCampos()) {
