@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/pages/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:supermarket/src/services/authentication_service.dart';
 
 class LoginPage extends StatelessWidget {
   static String route = "Login_page";
+/*   const LoginPage({Key key}) : super(key: key); */
 
-  const LoginPage({Key key}) : super(key: key);
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +37,13 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget createInput(String hint, Icon icon) {
+  Widget createInput(String hint, Icon icon, TextEditingController controller) {
     return Container(
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: Colors.grey[100]))),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
             prefixIcon: icon,
             border: InputBorder.none,
@@ -48,11 +53,15 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget createSubmitButton(context) {
+  Widget createSubmitButton(BuildContext context) {
     return Container(
       height: 50.0,
       child: RaisedButton(
         onPressed: () {
+          print(emailController.text);
+          print(passwordController.text);
+          context.read<AuthenticationService>().signIn(
+              email: emailController.text, password: passwordController.text);
           Navigator.pushReplacementNamed(context, Homepage.route);
         },
         shape:
@@ -160,8 +169,8 @@ class LoginPage extends StatelessWidget {
           ]),
       child: Column(
         children: <Widget>[
-          createInput("Correo electrónico", Icon(Icons.email)),
-          createInput("Contraseña", Icon(Icons.lock))
+          createInput("Correo electrónico", Icon(Icons.email), emailController),
+          createInput("Contraseña", Icon(Icons.lock), passwordController)
         ],
       ),
     );
