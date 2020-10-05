@@ -9,27 +9,27 @@ import 'package:supermarket/src/utils/data.dart';
 
 class FormularioPage extends StatefulWidget {
   static final route = "formulario";
-  String nombreA;
-  String categoriaA;
-  int cantidadA;
-  int preciox1A;
+  String nombre;
+  String categoria;
+  int cantidad;
+  int precio;
   String id;
   bool edit;
   bool lista;
   HomepageState home;
   FormularioPage(
-      {String nombreA,
-      int cantidadA,
-      int preciox1A,
-      String categoriaA,
+      {String nombre,
+      int cantidad,
+      int precio,
+      String categoria,
       String id,
       bool edit: false,
       bool lista: false,
       HomepageState home}) {
-    this.nombreA = nombreA;
-    this.cantidadA = cantidadA;
-    this.preciox1A = preciox1A;
-    this.categoriaA = categoriaA;
+    this.nombre = nombre;
+    this.cantidad = cantidad;
+    this.precio = precio;
+    this.categoria = categoria;
     this.id = id;
     this.edit = edit;
     this.lista = lista;
@@ -62,10 +62,10 @@ class _FormularioPageState extends State<FormularioPage> {
     _lista = widget.lista;
     _home = widget.home;
     if (widget.edit) {
-      _nombreA = widget.nombreA;
-      _cantidadA = widget.cantidadA;
-      _preciox1A = widget.preciox1A;
-      _categoriaA = widget.categoriaA;
+      _nombreA = widget.nombre;
+      _cantidadA = widget.cantidad;
+      _preciox1A = widget.precio;
+      _categoriaA = widget.categoria;
       _id = widget.id;
       _loadDataSelectedCard();
     } else {

@@ -1,148 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:supermarket/src/pages/home_page.dart';
-import 'package:supermarket/src/pages/formulario_page.dart';
-import 'package:supermarket/src/providers/productos_firebase.dart';
 
 class ProductoCard extends StatefulWidget {
-  static String route = "/Producto";
-  String nombreA;
-  String categoriaA;
-  int cantidadA;
-  int preciox1A;
-  int precioTotalProductoA;
-  String id;
   ProductoCard(
-      {String nombreA,
-      int cantidadA,
-      int precioTotalProductoA,
-      int preciox1A,
-      String categoriaA,
-      String id}) {
-    this.nombreA = nombreA;
-    this.cantidadA = cantidadA;
-    this.preciox1A = preciox1A;
-    this.precioTotalProductoA = precioTotalProductoA;
-    this.categoriaA = categoriaA;
-    this.id = id;
-  }
-  /*Map toJson() => {
-        "nombre":nombre,
-        "cantidad": cantidad,
-        "precio":preciox1 ,
-        "precioTotal":precioTotalProducto
-      };*/
+      {Key key, this.nombre, this.precio, this.cantidad, this.categoria})
+      : super(key: key);
+
+  final String nombre;
+  final int precio;
+  final int cantidad;
+  final String categoria;
+
   @override
-  createState() => _ProductoCard();
+  _ProductoCardState createState() => _ProductoCardState();
 }
 
-class _ProductoCard extends State<ProductoCard> {
-  String _nombreA;
-  int _cantidadA;
-  int _preciox1A;
-  int _precioTotalProductoA;
-  String _categoriaA;
-  String _id;
-  @override
-  void initState() {
-    _nombreA = widget.nombreA;
-    _cantidadA = widget.cantidadA;
-    _preciox1A = widget.preciox1A;
-    _precioTotalProductoA = widget.precioTotalProductoA;
-    _categoriaA = widget.categoriaA;
-    _id = widget.id;
-  }
+class _ProductoCardState extends State<ProductoCard> {
+  int precioTotal;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => FormularioPage(
-                      nombreA: _nombreA,
-                      cantidadA: _cantidadA,
-                      preciox1A: _preciox1A,
-                      categoriaA: _categoriaA,
-                      id: _id,
-                      edit: true,
-                    )));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  "$_nombreA X$_cantidadA     $_precioTotalProductoA",
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                subtitle: Text(
-                  "Precio x1: $_preciox1A",
-                  style: TextStyle(fontSize: 16.0),
-                ),
-              ),
-              ButtonBar(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.minimize),
-                    color: Colors.blue,
-                    tooltip: 'Decrecer en 1 la cantidad de producto',
-                    onPressed: () {
-                      _cantidadA--;
-                      _precioTotalProductoA =
-                          _precioTotalProductoA - _preciox1A;
-                      if (_cantidadA < 1) {
-                        _cantidadA = 1;
-                        _precioTotalProductoA = _preciox1A;
-                      } else {
-                        Map<String, dynamic> prodMap = {
-                          "nombre": _nombreA,
-                          "cantidad": _cantidadA,
-                          "precio": _preciox1A,
-                          "categoria": _categoriaA
-                        };
-                        ProductosFirebase().editarProducto(prodMap, _id);
-                      }
-                      setState(() {});
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    color: Colors.green,
-                    tooltip: 'Aumentar en 1 la cantidad de producto',
-                    onPressed: () {
-                      setState(() {
-                        _cantidadA++;
-                        _precioTotalProductoA =
-                            _preciox1A + _precioTotalProductoA;
+    return new Container(
+        height: 100,
+        margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+        child: new Stack(
+          children: <Widget>[
+            productCard(),
+            productThumbnail(),
+          ],
+        ));
+  }
 
-                        Map<String, dynamic> prodMap = {
-                          "nombre": _nombreA,
-                          "cantidad": _cantidadA,
-                          "precio": _preciox1A,
-                          "categoria": _categoriaA
-                        };
-                        ProductosFirebase().editarProducto(prodMap, _id);
-                      });
-                    },
+  productCard() {
+    precioTotal = widget.cantidad * widget.precio;
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0),
+      decoration: new BoxDecoration(
+          color: new Color(0xFF333366),
+          shape: BoxShape.rectangle,
+          borderRadius: new BorderRadius.circular(8.0),
+          boxShadow: <BoxShadow>[
+            new BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              offset: new Offset(0.0, 10.0),
+            )
+          ]),
+      child: new Container(
+        constraints: new BoxConstraints.expand(),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            new Container(height: 10),
+            new Text(
+              widget.nombre,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text("\$ " + precioTotal.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
+                      Text("\$ " + widget.precio.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300)),
+                    ],
                   ),
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    color: Colors.red,
-                    tooltip: 'Borrar articulo',
-                    onPressed: () {
-                      ProductosFirebase()
-                          .eliminarProducto(_categoriaA, _id)
-                          .then((value) => Navigator.of(context)
-                                  .pushReplacement(new MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                return new HomepageState().build(context);
-                              })));
-                    },
+                  ButtonBar(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.minimize),
+                        color: Colors.blue,
+                        tooltip: 'Decrecer en 1 la cantidad de producto',
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.add),
+                          color: Colors.green,
+                          tooltip: 'Aumentar en 1 la cantidad de producto',
+                          onPressed: () {}),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Colors.red,
+                        tooltip: 'Borrar articulo',
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          )),
+                ]),
+          ],
+        ),
+      ),
     );
+  }
+
+  productThumbnail() {
+    return new Container(
+        alignment: new FractionalOffset(0.0, 0.5),
+        margin: const EdgeInsets.only(left: 2),
+        child: CircleAvatar(
+          child: Text(widget.cantidad.toString()),
+        ));
   }
 }
