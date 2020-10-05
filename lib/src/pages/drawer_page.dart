@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/services/authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
@@ -28,6 +30,14 @@ class DrawerPage extends StatelessWidget {
               onTap: () => {
                     Navigator.of(context).pop(),
                     Navigator.pushReplacementNamed(context, "Historial_page")
+                  }),
+          _createDrawerItem(
+              icon: Icons.keyboard_return,
+              text: 'LogOut',
+              onTap: () => {
+                    context.read<AuthenticationService>().signOut().then((value) => Navigator.of(context)
+                          .pushNamedAndRemoveUntil(
+                              "Login_page", (Route<dynamic> route) => false))
                   }),
           ListTile(
             title: Text('0.0.1'),
