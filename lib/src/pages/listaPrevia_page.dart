@@ -16,26 +16,36 @@ class ListaPreviaPage extends StatefulWidget {
 class ListaPreviaPageState extends State<ListaPreviaPage> {
   String _user;
   String _pass;
+  List checkOn=[];
+  List checkOff=[];
   @override
   void initState() {
     super.initState();
   }
   void pruebaColl(){
-    setState(() {
-      
-    });
-    print("usuario1: $_user");
-  CollectionReference prod =
-        FirebaseFirestore.instance.collection('usuarios');
-        Query user = prod.where('email',isEqualTo: _user);
-        user.snapshots().listen((data) {data.docs.map((e) => print(e['email']));});
-
+        Query todo= FirebaseFirestore.instance.collection('productosPrevios');
+        print(todo);
+        Query user = todo.where('check',isEqualTo: false);
+        user.snapshots().listen((data) {
+          data.documents.forEach((element) { 
+            checkOn.add(element);
+            //print(element['nombre']);
+            });
+          });
+          print("----------------------------");
+        Query user2 = todo.where('check',isEqualTo: true);
+        user2.snapshots().listen((data) {
+          data.documents.forEach((element) { 
+            checkOn.add(element);
+            //print(element['nombre']);
+            });
+          });
 }
   @override
   Widget build(BuildContext context) {
     CollectionReference prod =
         FirebaseFirestore.instance.collection('productosPrevios');
-        pruebaColl();
+        //pruebaColl();
     TextEditingController _textFieldController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -56,9 +66,7 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
             }
 
             return new ListView(
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return PrevioCard(id: document.id ,nombre: document.data()['nombre'], estadoCheck: document.data()['check'],); 
-              }).toList(),
+              children: crearItem(snapshot),
             );
           },
         ),
@@ -96,6 +104,22 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  List crearItem(AsyncSnapshot<QuerySnapshot> snapshot){
+    List<PrevioCard> listaCheck=[];
+      List<PrevioCard> lis=snapshot.data.docs.map((DocumentSnapshot document) {
+                return PrevioCard(id: document.id ,nombre: document.data()['nombre'], estadoCheck: document.data()['check'],); 
+              }).toList();
+      lis.forEach((element) {
+        if(!element.estadoCheck){
+        listaCheck.add(element);
+        }});
+      lis.forEach((element) {
+        if(element.estadoCheck){
+        listaCheck.add(element);
+        }});
+    return listaCheck;
   }
 
  _displayDialog(BuildContext context, TextEditingController controller) async {
