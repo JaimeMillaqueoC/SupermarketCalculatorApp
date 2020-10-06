@@ -173,7 +173,7 @@ class _FormularioPageState extends State<FormularioPage> {
                 nuevoProducto['precio'] = int.parse(_precioP.text);
                 nuevoProducto['cantidad'] = int.parse(_cantidadP.text);
                 nuevoProducto['categoria'] = _selectedCategoria;
-                ProductosCloud().addProductos(nuevoProducto).then((value) {
+                ProductosCloud().addProductos(newProducto: nuevoProducto,collection: "productos").then((value) {
                   _home.setState(() {});
                   Navigator.of(context).pop();
                 });

@@ -58,8 +58,6 @@ class LoginPage extends StatelessWidget {
       height: 50.0,
       child: RaisedButton(
         onPressed: () {
-          //print(emailController.text);
-          //print(passwordController.text);
           context.read<AuthenticationService>().signIn(
               email: emailController.text, password: passwordController.text);
           Navigator.pushReplacementNamed(context, Homepage.route);

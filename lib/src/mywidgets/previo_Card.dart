@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/providers/productos_cloud.dart';
 
 class PrevioCard extends StatefulWidget {
   PrevioCard(
-      {Key key, this.nombre, this.estadoCheck})
+      {Key key, this.id, this.nombre, this.estadoCheck})
       : super(key: key);
-
+ final String id;
   final String nombre;
   final bool estadoCheck;
 
@@ -42,11 +43,28 @@ class _PrevioCardState extends State<PrevioCard> {
             new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  Container(
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+            child: Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: widget.estadoCheck
+                ? Icon(
+                    Icons.check,
+                    size: 30.0,
+                    color: Colors.white,
+                    )
+                : Icon(
+                    Icons.check_box_outline_blank,
+                    size: 30.0,
+                    color: Colors.blue,
+                    ),
+            ),),
+                  /*
                   Checkbox(value: widget.estadoCheck,  onChanged: (value) {
                     setState(() {
-                      //widget.estadoCheck=value;
+                      
                     });
-                  },), 
+                  },), */
                   Text(widget.nombre,
                           style: TextStyle(
                               color: Colors.white,
@@ -60,7 +78,9 @@ class _PrevioCardState extends State<PrevioCard> {
                         icon: Icon(Icons.delete),
                         color: Colors.red,
                         tooltip: 'Borrar articulo',
-                        onPressed: () {},
+                        onPressed: () {
+                          ProductosCloud().eliminarProductoPrevio(widget);
+                        },
                       ),
                     ],
                   ),
