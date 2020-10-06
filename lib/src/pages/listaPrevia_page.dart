@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/rendering.dart';
 import 'package:supermarket/src/pages/drawer_page.dart';
-import 'package:supermarket/src/pages/home_page.dart';
 import 'package:supermarket/src/pages/formulario_page.dart';
-import 'package:supermarket/src/providers/productos_firebase.dart';
-import 'package:supermarket/src/providers/categoria_providers.dart';
-import 'package:supermarket/src/mywidgets/producto_card.dart';
-import 'package:supermarket/src/services/authentication_service.dart';
-import 'package:provider/provider.dart';
-import 'package:supermarket/src/utils/data.dart';
+import 'package:supermarket/src/mywidgets/previo_Card.dart';
 class ListaPreviaPage extends StatefulWidget {
   static final route = "ListaPrevia_page";
   @override
@@ -21,13 +16,24 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
   @override
   void initState() {
     super.initState();
-    _obtenerDatos(datos: ['user','pass']);
   }
+  void pruebaColl(){
+    setState(() {
+      
+    });
+    print("usuario1: $_user");
+  CollectionReference prod =
+        FirebaseFirestore.instance.collection('usuarios');
+        Query user = prod.where('email',isEqualTo: _user);
+        user.snapshots().listen((data) {data.docs.map((e) => print(e['email']));});
 
+}
   @override
   Widget build(BuildContext context) {
     CollectionReference prod =
         FirebaseFirestore.instance.collection('productosPrevios');
+        pruebaColl();
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("Lista Previa"),
@@ -48,8 +54,7 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
 
             return new ListView(
               children: snapshot.data.docs.map((DocumentSnapshot document) {
-                print(document.data()['nombre']);
-                return productCard(document.data()['nombre']); 
+                return PrevioCard(nombre: document.data()['nombre'], estadoCheck: true,); 
               }).toList(),
             );
           },
@@ -92,40 +97,6 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-    Future<void> _obtenerDatos({List<String> datos}) async {
-    for (String productoDato in datos) {
-      bool exist = await Data().checkData(productoDato);
-      if (exist) {
-        String datoObtenido = await Data().getData(productoDato);
-        print(datoObtenido);
-        if (productoDato == 'user') {
-          _user= datoObtenido;
-        }
-        if (productoDato == 'pass') {
-          _pass = datoObtenido;
-        }
-        setState(() { });
-         }
-      }
-    }
-  Widget productCard(String nombre) {
-   
-    return Card(
-      elevation: 15.0,
-      color: new Color(0xFF333366),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: InkWell(
-          onTap: () {
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [ListTile(
-        title: Text(
-        nombre,
-          style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold, color: Colors.white, ),
-        ),
-      ),]
-          )),
-    );
-  }
+
+ 
 }

@@ -13,7 +13,6 @@ class ProductosCloud {
     // Call the user's CollectionReference to add a new user
     return users
         .add(newProducto)
-        .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 }
