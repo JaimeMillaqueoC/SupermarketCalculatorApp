@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supermarket/src/mywidgets/producto_card.dart';
 
 class ProductosCloud {
   static final ProductosCloud _instancia = ProductosCloud._privado();
@@ -15,5 +16,43 @@ class ProductosCloud {
         .add(newProducto)
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
+  }
+
+  Future<void> restarProducto(ProductoCard pc) {
+    CollectionReference productos =
+        FirebaseFirestore.instance.collection('productos');
+
+    if (pc.cantidad <= 1) {
+      return productos
+          .doc(pc.id)
+          .update({'cantidad': pc.cantidad})
+          .then((value) => print("Producto actualizado"))
+          .catchError((error) =>
+              print("No se ha podido actualizar el usuario debido a $error"));
+    }
+
+    return productos
+        .doc(pc.id)
+        .update({'cantidad': pc.cantidad - 1})
+        .then((value) => print("Producto actualizado"))
+        .catchError((error) =>
+            print("No se ha podido actualizar el usuario debido a $error"));
+  }
+
+  Future<void> sumarProducto(ProductoCard pc) {
+    CollectionReference productos =
+        FirebaseFirestore.instance.collection('productos');
+    return productos
+        .doc(pc.id)
+        .update({'cantidad': pc.cantidad + 1})
+        .then((value) => print("Producto actualizado"))
+        .catchError((error) =>
+            print("No se ha podido actualizar el usuario debido a $error"));
+  }
+
+  Future<void> eliminarProducto(ProductoCard pc) {
+    CollectionReference productos =
+        FirebaseFirestore.instance.collection('productos');
+    return productos.doc(pc.id).delete();
   }
 }

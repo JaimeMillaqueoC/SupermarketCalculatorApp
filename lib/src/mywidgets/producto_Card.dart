@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/providers/productos_cloud.dart';
 
 class ProductoCard extends StatefulWidget {
   ProductoCard(
-      {Key key, this.nombre, this.precio, this.cantidad, this.categoria})
+      {Key key,
+      this.id,
+      this.nombre,
+      this.precio,
+      this.cantidad,
+      this.categoria})
       : super(key: key);
 
+  final String id;
   final String nombre;
   final int precio;
   final int cantidad;
@@ -16,7 +23,7 @@ class ProductoCard extends StatefulWidget {
 
 class _ProductoCardState extends State<ProductoCard> {
   int precioTotal;
-
+  ProductoCard ref;
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -81,18 +88,24 @@ class _ProductoCardState extends State<ProductoCard> {
                         icon: Icon(Icons.minimize),
                         color: Colors.blue,
                         tooltip: 'Decrecer en 1 la cantidad de producto',
-                        onPressed: () {},
+                        onPressed: () {
+                          ProductosCloud().restarProducto(widget);
+                        },
                       ),
                       IconButton(
                           icon: Icon(Icons.add),
                           color: Colors.green,
                           tooltip: 'Aumentar en 1 la cantidad de producto',
-                          onPressed: () {}),
+                          onPressed: () {
+                            ProductosCloud().sumarProducto(widget);
+                          }),
                       IconButton(
                         icon: Icon(Icons.delete),
                         color: Colors.red,
                         tooltip: 'Borrar articulo',
-                        onPressed: () {},
+                        onPressed: () {
+                          _showMyDialog();
+                        },
                       ),
                     ],
                   ),
@@ -110,5 +123,40 @@ class _ProductoCardState extends State<ProductoCard> {
         child: CircleAvatar(
           child: Text(widget.cantidad.toString()),
         ));
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('¡Cuidado!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Estás a punto de eliminar para siempre un producto'),
+                Text('¿Quieres continuar?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Eliminar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ProductosCloud().eliminarProducto(widget);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

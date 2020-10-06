@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supermarket/src/pages/home_page.dart';
-import 'package:supermarket/src/utils/data.dart';
 import 'package:provider/provider.dart';
 import 'package:supermarket/src/services/authentication_service.dart';
 
@@ -53,21 +51,14 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
-  void _guardarCredenciales() async {
-    await Data().saveData('user', emailController.text);
-    await Data().saveData('pass', passwordController.text);
-  }
+
   Widget createSubmitButton(BuildContext context) {
     return Container(
       height: 50.0,
       child: RaisedButton(
         onPressed: () {
-          //print(emailController.text);
-          //print(passwordController.text);
           context.read<AuthenticationService>().signIn(
               email: emailController.text, password: passwordController.text);
-              _guardarCredenciales();
-          Navigator.pushReplacementNamed(context, Homepage.route);
         },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
