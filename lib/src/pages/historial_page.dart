@@ -15,6 +15,8 @@ class _HistorialPageState extends State<HistorialPage> {
     return new Scaffold(
         appBar: AppBar(
           title: Text("Historial"),
+          backgroundColor: Color(0xFF736AB7),
+          shadowColor: Color(0xFF736AB7),
         ),
         drawer: DrawerPage(),
         body: Center(child: Text("Soy el historial")));

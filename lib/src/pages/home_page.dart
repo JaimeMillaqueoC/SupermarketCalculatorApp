@@ -31,10 +31,12 @@ class HomepageState extends State<Homepage> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text("Pedido actual"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF736AB7),
+        shadowColor: Color(0xFF736AB7),
       ),
       drawer: DrawerPage(),
       body: Container(
+        color: Colors.white,
         child: StreamBuilder<QuerySnapshot>(
           stream: categorias.snapshots(),
           builder:
@@ -47,15 +49,6 @@ class HomepageState extends State<Homepage> {
               return Center(child: CircularProgressIndicator());
             }
 
-            /* return new ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (_, index) => ProductoRow(Producto(
-                    id: snapshot.data.docs[index].id,
-                    nombre: snapshot.data.docs[index].data()['nombre'],
-                    precio: snapshot.data.docs[index].data()['precio'],
-                    cantidad: snapshot.data.docs[index].data()['cantidad'],
-                    categoria: snapshot.data.docs[index].data()['categoria']))); */
-
             return new ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (_, index) {
@@ -64,7 +57,20 @@ class HomepageState extends State<Homepage> {
                       .where('categoria',
                           isEqualTo: snapshot.data.docs[index].data()['valor']);
                   return Column(children: <Widget>[
-                    Text(snapshot.data.docs[index].data()['valor']),
+                    Container(
+                        margin: new EdgeInsets.all(10.0),
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                            child: Text(
+                          snapshot.data.docs[index].data()['valor'],
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ))),
                     Container(
                       child: StreamBuilder<QuerySnapshot>(
                         stream: productosFiltrados.snapshots(),
@@ -80,6 +86,7 @@ class HomepageState extends State<Homepage> {
                           }
 
                           return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: snapshot.data.docs.length,
                             shrinkWrap: true,
                             itemBuilder: (_, index) {
@@ -104,12 +111,8 @@ class HomepageState extends State<Homepage> {
         ),
       ),
       bottomNavigationBar: new Container(
-          height: 80.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-            color: Colors.blue,
-          ),
+          height: 60.0,
+          color: Color(0xFF736AB7),
           child: StreamBuilder<QuerySnapshot>(
               stream: productos.snapshots(),
               builder: (BuildContext context,
