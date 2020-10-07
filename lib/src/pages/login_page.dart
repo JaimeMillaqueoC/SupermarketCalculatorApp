@@ -37,12 +37,13 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget createInput(String hint, Icon icon, TextEditingController controller) {
+  Widget createInput(String hint, Icon icon, TextEditingController controller, bool obscureText) {
     return Container(
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: Colors.grey[100]))),
       child: TextField(
+        obscureText: obscureText,
         controller: controller,
         decoration: InputDecoration(
             prefixIcon: icon,
@@ -166,8 +167,8 @@ class LoginPage extends StatelessWidget {
           ]),
       child: Column(
         children: <Widget>[
-          createInput("Correo electrónico", Icon(Icons.email), emailController),
-          createInput("Contraseña", Icon(Icons.lock), passwordController)
+          createInput("Correo electrónico", Icon(Icons.email), emailController,false),
+          createInput("Contraseña", Icon(Icons.lock), passwordController,true)
         ],
       ),
     );
