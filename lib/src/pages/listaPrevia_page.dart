@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
@@ -16,36 +14,38 @@ class ListaPreviaPage extends StatefulWidget {
 class ListaPreviaPageState extends State<ListaPreviaPage> {
   String _user;
   String _pass;
-  List checkOn=[];
-  List checkOff=[];
+  List checkOn = [];
+  List checkOff = [];
   @override
   void initState() {
     super.initState();
   }
-  void pruebaColl(){
-        Query todo= FirebaseFirestore.instance.collection('productosPrevios');
-        print(todo);
-        Query user = todo.where('check',isEqualTo: false);
-        user.snapshots().listen((data) {
-          data.documents.forEach((element) { 
-            checkOn.add(element);
-            //print(element['nombre']);
-            });
-          });
-          print("----------------------------");
-        Query user2 = todo.where('check',isEqualTo: true);
-        user2.snapshots().listen((data) {
-          data.documents.forEach((element) { 
-            checkOn.add(element);
-            //print(element['nombre']);
-            });
-          });
-}
+
+  void pruebaColl() {
+    CollectionReference todo =
+        FirebaseFirestore.instance.collection('productos');
+    todo.snapshots();
+    Query user = todo.where('nombre', isEqualTo: false);
+    user.snapshots().listen((data) {
+      data.documents.forEach((element) {
+        checkOn.add(element);
+      });
+    });
+    print("----------------------------");
+    Query user2 = todo.where('check', isEqualTo: true);
+    user2.snapshots().listen((data) {
+      data.documents.forEach((element) {
+        checkOn.add(element);
+        //print(element['nombre']);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     CollectionReference prod =
         FirebaseFirestore.instance.collection('productosPrevios');
-        //pruebaColl();
+    //pruebaColl();
     TextEditingController _textFieldController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +96,7 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
                 borderRadius: BorderRadius.circular(18.0),
               ),
               onPressed: () {
-                _displayDialog(context,_textFieldController);
+                _displayDialog(context, _textFieldController);
               },
             )
           ],
@@ -106,82 +106,111 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
     );
   }
 
-  List crearItem(AsyncSnapshot<QuerySnapshot> snapshot){
-    List<PrevioCard> listaCheck=[];
-      List<PrevioCard> lis=snapshot.data.docs.map((DocumentSnapshot document) {
-                return PrevioCard(id: document.id ,nombre: document.data()['nombre'], estadoCheck: document.data()['check'],); 
-              }).toList();
-      lis.forEach((element) {
-        if(!element.estadoCheck){
+  List crearItem(AsyncSnapshot<QuerySnapshot> snapshot) {
+    List<PrevioCard> listaCheck = [];
+    CollectionReference todo =
+        FirebaseFirestore.instance.collection('productos');
+    
+    List<PrevioCard> lis = snapshot.data.docs.map((DocumentSnapshot document) {
+      todo.snapshots().listen((data) {
+        data.documents.forEach((element) {
+          if (element['nombre'].toString().toLowerCase() ==
+              document.data()['nombre'].toString().toLowerCase()) {
+            ProductosCloud().setCheck(id: document.id,state: true);
+            print(element['nombre'].toString().toLowerCase());
+          }
+        });
+      });
+      return PrevioCard(
+        id: document.id,
+        nombre: document.data()['nombre'],
+        estadoCheck: document.data()['check'],
+      );
+    }).toList();
+    lis.forEach((element) {
+      if (!element.estadoCheck) {
         listaCheck.add(element);
-        }});
-      lis.forEach((element) {
-        if(element.estadoCheck){
+      }
+    });
+    lis.forEach((element) {
+      if (element.estadoCheck) {
         listaCheck.add(element);
-        }});
+      }
+    });
+
+    /* print("----------------------------");
+        Query user2 = todo.where('check',isEqualTo: true);
+        user2.snapshots().listen((data) {
+          data.documents.forEach((element) { 
+            checkOn.add(element);
+            //print(element['nombre']);
+            });
+          });*/
     return listaCheck;
   }
 
- _displayDialog(BuildContext context, TextEditingController controller) async {
+  _displayDialog(BuildContext context, TextEditingController controller) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Agregar a la lista previa'),
             shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                borderRadius: BorderRadius.all(Radius.circular(30.0))),
             content: Container(
-              decoration: new BoxDecoration(
-              //shape: BoxShape.circle,
-              color: const Color(0xFFFFFF),
-              borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
-            ),
-              child:TextField(
-              controller: controller,
-              decoration: InputDecoration(hintText: "Ingrese nombre del producto"),
-            )),
+                decoration: new BoxDecoration(
+                  //shape: BoxShape.circle,
+                  color: const Color(0xFFFFFF),
+                  borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
+                ),
+                child: TextField(
+                  controller: controller,
+                  decoration:
+                      InputDecoration(hintText: "Ingrese nombre del producto"),
+                )),
             actions: <Widget>[
               RaisedButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(width: 20, height: 0),
-                  Text("Cancelar",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Container(width: 20, height: 0),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(width: 20, height: 0),
+                    Text("Cancelar",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(width: 20, height: 0),
+                  ],
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              color: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
               RaisedButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(width: 20, height: 0),
-                  Text("AGREGAR",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Container(width: 20, height: 0),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(width: 20, height: 0),
+                    Text("AGREGAR",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(width: 20, height: 0),
+                  ],
+                ),
+                color: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+                onPressed: () {
+                  Map<String, dynamic> newPL = {
+                    'nombre': controller.text,
+                    'check': false,
+                  };
+                  ProductosCloud().addProductos(
+                      newProducto: newPL, collection: "productosPrevios");
+                  Navigator.pop(context);
+                },
               ),
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              ),
-              onPressed: () {
-                Map<String,dynamic> newPL= {
-                  'nombre':controller.text,
-                  'check':false,
-                };
-                ProductosCloud().addProductos(newProducto: newPL,collection: "productosPrevios");
-                Navigator.pop(context);
-              },
-            ),
             ],
           );
         });

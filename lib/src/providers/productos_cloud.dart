@@ -60,4 +60,16 @@ class ProductosCloud {
         FirebaseFirestore.instance.collection('productosPrevios');
     return productos.doc(pc.id).delete();
   }
+  Future<void> setCheck({String id,bool state}) {
+    CollectionReference productos =
+        FirebaseFirestore.instance.collection('productosPrevios');
+    return productos
+        .doc(id)
+        .update({'check': state})
+        .then((value) => print("Producto actualizado"))
+        .catchError((error) =>
+            print("No se ha podido actualizar el usuario debido a $error"));
+  }
+
+
 }
