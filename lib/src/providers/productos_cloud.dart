@@ -59,7 +59,7 @@ class ProductosCloud {
                           isEqualTo: p.nombre);
     var a = productosFiltrados.snapshots().listen((data) {data.docs.map((DocumentSnapshot document) {
       setCheck(id: document.id,state: false);
-      print(document.id);
+      print("id: ${document.id}---nombre: ${document.data()['nombre']}---state:${document.data()['check']}");
     }).toList();});
     print(a);
     return productos.doc(p.id).delete();
@@ -77,7 +77,7 @@ class ProductosCloud {
     return productos
         .doc(id)
         .update({'check': state})
-        .then((value) => print("Producto actualizado"))
+        .then((value) => print("$id actualizado"))
         .catchError((error) =>
             print("No se ha podido actualizar el usuario debido a $error"));
   }

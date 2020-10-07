@@ -97,6 +97,7 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
           }
         });
       });
+      print("id: ${document.id}---nombre: ${document.data()['nombre']}---state:${document.data()['check']}");
       return PrevioCard(
         id: document.id,
         nombre: document.data()['nombre'],

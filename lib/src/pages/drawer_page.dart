@@ -19,7 +19,7 @@ class DrawerPage extends StatelessWidget {
                   }),
           _createDrawerItem(
               icon: Icons.assignment,
-              text: 'Lista previa',
+              text: 'Crear lista previa',
               onTap: () => {
                     Navigator.of(context).pop(),
                     Navigator.pushReplacementNamed(context, 'ListaPrevia_page')
@@ -49,7 +49,7 @@ class DrawerPage extends StatelessWidget {
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
         decoration: BoxDecoration(
-          color: Color(0xFF736AB7),
+          color: Colors.blue,
         ),
         child: Stack(
           children: <Widget>[
