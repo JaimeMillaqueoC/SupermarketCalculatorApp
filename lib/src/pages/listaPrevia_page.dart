@@ -145,13 +145,14 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
                   decoration:
                       InputDecoration(hintText: "Ingrese nombre del producto"),
                 )),
+                
             actions: <Widget>[
               RaisedButton(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(width: 20, height: 0),
-                    Text("Cancelar",
+                    Text("CANCELAR",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     Container(width: 20, height: 0),
                   ],

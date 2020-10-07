@@ -21,8 +21,15 @@ class _PrevioCardState extends State<PrevioCard> {
         //height: 70,
         margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         child: new Stack(
-          children: <Widget>[Container(
-      //margin: new EdgeInsets.only(left: 20.0),
+          children: <Widget>[productCard(),
+     productThumbnail(),
+    ]))
+    
+    ;
+  }
+  productCard() {
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0),
       decoration: new BoxDecoration(
           color: new Color(0xFF333366),
           shape: BoxShape.rectangle,
@@ -43,28 +50,6 @@ class _PrevioCardState extends State<PrevioCard> {
             new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Container(
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-            child: Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: widget.estadoCheck
-                ? Icon(
-                    Icons.check,
-                    size: 30.0,
-                    color: Colors.white,
-                    )
-                : Icon(
-                    Icons.check_box_outline_blank,
-                    size: 30.0,
-                    color: Colors.blue,
-                    ),
-            ),),
-                  /*
-                  Checkbox(value: widget.estadoCheck,  onChanged: (value) {
-                    setState(() {
-                      
-                    });
-                  },), */
                   Text(widget.nombre,
                           style: TextStyle(
                               color: Colors.white,
@@ -72,6 +57,7 @@ class _PrevioCardState extends State<PrevioCard> {
                               fontWeight: FontWeight.bold)),
                       
                   ButtonBar(
+                    alignment: MainAxisAlignment.start,
                     children: <Widget>[
                       
                       IconButton(
@@ -88,9 +74,24 @@ class _PrevioCardState extends State<PrevioCard> {
           ],
         ),
       ),
-    )]))
-    
-    ;
+    );
+
   }
 
+  productThumbnail() {
+    return Container(
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+        margin: const EdgeInsets.only(left: 5,top: 20),
+            child: widget.estadoCheck
+                ? Icon(
+                    Icons.check,
+                    size: 30.0,
+                    color: Colors.white,
+                    )
+                : Icon(
+                    Icons.check_box_outline_blank,
+                    size: 30.0,
+                    color: Colors.blue,
+                    ),);
+  }
 }
