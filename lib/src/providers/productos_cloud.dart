@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:supermarket/src/mywidgets/producto_card.dart';
+import 'package:supermarket/src/model/Producto.dart';
 
 class ProductosCloud {
   static final ProductosCloud _instancia = ProductosCloud._privado();
@@ -18,41 +18,41 @@ class ProductosCloud {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  Future<void> restarProducto(ProductoCard pc) {
+  Future<void> restarProducto(Producto p) {
     CollectionReference productos =
         FirebaseFirestore.instance.collection('productos');
 
-    if (pc.cantidad <= 1) {
+    if (p.cantidad <= 1) {
       return productos
-          .doc(pc.id)
-          .update({'cantidad': pc.cantidad})
+          .doc(p.id)
+          .update({'cantidad': p.cantidad})
           .then((value) => print("Producto actualizado"))
           .catchError((error) =>
               print("No se ha podido actualizar el usuario debido a $error"));
     }
 
     return productos
-        .doc(pc.id)
-        .update({'cantidad': pc.cantidad - 1})
+        .doc(p.id)
+        .update({'cantidad': p.cantidad - 1})
         .then((value) => print("Producto actualizado"))
         .catchError((error) =>
             print("No se ha podido actualizar el usuario debido a $error"));
   }
 
-  Future<void> sumarProducto(ProductoCard pc) {
+  Future<void> sumarProducto(Producto p) {
     CollectionReference productos =
         FirebaseFirestore.instance.collection('productos');
     return productos
-        .doc(pc.id)
-        .update({'cantidad': pc.cantidad + 1})
+        .doc(p.id)
+        .update({'cantidad': p.cantidad + 1})
         .then((value) => print("Producto actualizado"))
         .catchError((error) =>
             print("No se ha podido actualizar el usuario debido a $error"));
   }
 
-  Future<void> eliminarProducto(ProductoCard pc) {
+  Future<void> eliminarProducto(Producto p) {
     CollectionReference productos =
         FirebaseFirestore.instance.collection('productos');
-    return productos.doc(pc.id).delete();
+    return productos.doc(p.id).delete();
   }
 }

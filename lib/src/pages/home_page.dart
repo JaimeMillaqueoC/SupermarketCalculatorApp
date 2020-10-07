@@ -3,9 +3,10 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/model/Producto.dart';
+import 'package:supermarket/src/mywidgets/producto_row.dart';
 import 'package:supermarket/src/pages/formulario_page.dart';
 import 'package:supermarket/src/pages/drawer_page.dart';
-import 'package:supermarket/src/mywidgets/producto_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Homepage extends StatefulWidget {
@@ -18,13 +19,14 @@ class HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    //ProductosFirebase().productos;
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference prod =
+    CollectionReference productos =
         FirebaseFirestore.instance.collection('productos');
+    CollectionReference categorias =
+        FirebaseFirestore.instance.collection('categorias');
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -34,7 +36,7 @@ class HomepageState extends State<Homepage> {
       drawer: DrawerPage(),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
-          stream: prod.snapshots(),
+          stream: productos.snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -47,12 +49,12 @@ class HomepageState extends State<Homepage> {
 
             return new ListView(
               children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return ProductoCard(
+                return ProductoRow(Producto(
                     id: document.id,
                     nombre: document.data()['nombre'],
                     precio: document.data()['precio'],
                     cantidad: document.data()['cantidad'],
-                    categoria: document.data()['categoria']);
+                    categoria: document.data()['categoria']));
               }).toList(),
             );
           },
@@ -66,7 +68,7 @@ class HomepageState extends State<Homepage> {
             color: Colors.blue,
           ),
           child: StreamBuilder<QuerySnapshot>(
-              stream: prod.snapshots(),
+              stream: productos.snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 int montoTotal = 0;
