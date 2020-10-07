@@ -47,20 +47,14 @@ class _PrevioCardState extends State<PrevioCard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             new Container(height: 10),
-            new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(widget.nombre,
+             ListTile(
+                    leading: Container(width:0.0),
+                    title: Text(widget.nombre,
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold)),
-                      
-                  ButtonBar(
-                    alignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      
-                      IconButton(
+                    trailing: IconButton(
                         icon: Icon(Icons.delete),
                         color: Colors.red,
                         tooltip: 'Borrar articulo',
@@ -68,9 +62,8 @@ class _PrevioCardState extends State<PrevioCard> {
                           ProductosCloud().eliminarProductoPrevio(widget);
                         },
                       ),
-                    ],
                   ),
-                ]),
+            new Container(height: 10),
           ],
         ),
       ),
