@@ -24,7 +24,6 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
   Widget build(BuildContext context) {
     CollectionReference prod =
         FirebaseFirestore.instance.collection('productosPrevios');
-    //pruebaColl();
     TextEditingController _textFieldController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
