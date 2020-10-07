@@ -34,7 +34,10 @@ class DrawerPage extends StatelessWidget {
           _createDrawerItem(
               icon: Icons.exit_to_app,
               text: 'LogOut',
-              onTap: () => {context.read<AuthenticationService>().signOut()}),
+              onTap: () => {
+                    context.read<AuthenticationService>().signOut(),
+                    Navigator.pushReplacementNamed(context, "Login_page")
+                  }),
           ListTile(
             title: Text('0.0.1'),
             onTap: () {},

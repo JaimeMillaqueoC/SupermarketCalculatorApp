@@ -89,10 +89,16 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
         FirebaseFirestore.instance.collection('productos');
 
     List<PrevioCard> lis = snapshot.data.docs.map((DocumentSnapshot document) {
+      print(document['nombre']);
+
+      /* if (document['nombre'].toString().toLowerCase() ==
+          document.data()['nombre'].toString().toLowerCase()) {
+        ProductosCloud().setCheck(id: document.id, state: true);
+      } */
       todo.snapshots().listen((data) {
-        data.documents.forEach((element) {
+        data.docs.forEach((element) {
           if (element['nombre'].toString().toLowerCase() ==
-              document.data()['nombre'].toString().toLowerCase()) {
+              document['nombre'].toString().toLowerCase()) {
             ProductosCloud().setCheck(id: document.id, state: true);
           }
         });
@@ -103,6 +109,7 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
         estadoCheck: document.data()['check'],
       );
     }).toList();
+
     lis.forEach((element) {
       if (!element.estadoCheck) {
         listaCheck.add(element);
