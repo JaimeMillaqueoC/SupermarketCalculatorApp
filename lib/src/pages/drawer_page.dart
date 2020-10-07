@@ -49,7 +49,7 @@ class DrawerPage extends StatelessWidget {
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: Color(0xFF736AB7),
         ),
         child: Stack(
           children: <Widget>[

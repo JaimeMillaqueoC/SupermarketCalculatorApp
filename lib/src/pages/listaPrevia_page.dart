@@ -12,13 +12,10 @@ class ListaPreviaPage extends StatefulWidget {
 }
 
 class ListaPreviaPageState extends State<ListaPreviaPage> {
-
   @override
   void initState() {
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +25,8 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Lista Previa"),
+        backgroundColor: Color(0xFF736AB7),
+        shadowColor: Color(0xFF736AB7),
       ),
       drawer: DrawerPage(),
       body: Container(
@@ -54,7 +53,7 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-          color: Colors.blue,
+          color: Color(0xFF736AB7),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -88,13 +87,13 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
     List<PrevioCard> listaCheck = [];
     CollectionReference todo =
         FirebaseFirestore.instance.collection('productos');
-    
+
     List<PrevioCard> lis = snapshot.data.docs.map((DocumentSnapshot document) {
       todo.snapshots().listen((data) {
         data.documents.forEach((element) {
           if (element['nombre'].toString().toLowerCase() ==
               document.data()['nombre'].toString().toLowerCase()) {
-            ProductosCloud().setCheck(id: document.id,state: true);
+            ProductosCloud().setCheck(id: document.id, state: true);
           }
         });
       });
@@ -145,7 +144,6 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
                   decoration:
                       InputDecoration(hintText: "Ingrese nombre del producto"),
                 )),
-                
             actions: <Widget>[
               RaisedButton(
                 child: Row(

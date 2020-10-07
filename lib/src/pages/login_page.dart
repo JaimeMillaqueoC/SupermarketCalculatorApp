@@ -60,7 +60,6 @@ class LoginPage extends StatelessWidget {
         onPressed: () {
           context.read<AuthenticationService>().signIn(
               email: emailController.text, password: passwordController.text);
-          Navigator.pushReplacementNamed(context, Homepage.route);
         },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
