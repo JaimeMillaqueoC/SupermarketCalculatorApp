@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 import 'package:supermarket/src/model/Producto.dart';
 import 'package:supermarket/src/mywidgets/previo_Card.dart';
 
@@ -71,4 +72,5 @@ class ProductosCloud {
         .catchError((error) =>
             print("No se ha podido actualizar el usuario debido a $error"));
   }
+
 }
