@@ -12,34 +12,13 @@ class ListaPreviaPage extends StatefulWidget {
 }
 
 class ListaPreviaPageState extends State<ListaPreviaPage> {
-  String _user;
-  String _pass;
-  List checkOn = [];
-  List checkOff = [];
+
   @override
   void initState() {
     super.initState();
   }
 
-  void pruebaColl() {
-    CollectionReference todo =
-        FirebaseFirestore.instance.collection('productos');
-    todo.snapshots();
-    Query user = todo.where('nombre', isEqualTo: false);
-    user.snapshots().listen((data) {
-      data.documents.forEach((element) {
-        checkOn.add(element);
-      });
-    });
-    print("----------------------------");
-    Query user2 = todo.where('check', isEqualTo: true);
-    user2.snapshots().listen((data) {
-      data.documents.forEach((element) {
-        checkOn.add(element);
-        //print(element['nombre']);
-      });
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
