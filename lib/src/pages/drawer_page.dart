@@ -19,7 +19,7 @@ class DrawerPage extends StatelessWidget {
                   }),
           _createDrawerItem(
               icon: Icons.assignment,
-              text: 'Crear lista previa',
+              text: 'Lista previa',
               onTap: () => {
                     Navigator.of(context).pop(),
                     Navigator.pushReplacementNamed(context, 'ListaPrevia_page')

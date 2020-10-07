@@ -36,7 +36,7 @@ class HomepageState extends State<Homepage> {
       drawer: DrawerPage(),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
-          stream: productos.snapshots(),
+          stream: categorias.snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -47,16 +47,59 @@ class HomepageState extends State<Homepage> {
               return Center(child: CircularProgressIndicator());
             }
 
-            return new ListView(
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return ProductoRow(Producto(
-                    id: document.id,
-                    nombre: document.data()['nombre'],
-                    precio: document.data()['precio'],
-                    cantidad: document.data()['cantidad'],
-                    categoria: document.data()['categoria']));
-              }).toList(),
-            );
+            /* return new ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (_, index) => ProductoRow(Producto(
+                    id: snapshot.data.docs[index].id,
+                    nombre: snapshot.data.docs[index].data()['nombre'],
+                    precio: snapshot.data.docs[index].data()['precio'],
+                    cantidad: snapshot.data.docs[index].data()['cantidad'],
+                    categoria: snapshot.data.docs[index].data()['categoria']))); */
+
+            return new ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (_, index) {
+                  Query productosFiltrados = FirebaseFirestore.instance
+                      .collection('productos')
+                      .where('categoria',
+                          isEqualTo: snapshot.data.docs[index].data()['valor']);
+                  return Column(children: <Widget>[
+                    Text(snapshot.data.docs[index].data()['valor']),
+                    Container(
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: productosFiltrados.snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(child: Text("Algo ha salido mal"));
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+
+                          return ListView.builder(
+                            itemCount: snapshot.data.docs.length,
+                            shrinkWrap: true,
+                            itemBuilder: (_, index) {
+                              return ProductoRow(Producto(
+                                  id: snapshot.data.docs[index].id,
+                                  nombre: snapshot.data.docs[index]
+                                      .data()['nombre'],
+                                  precio: snapshot.data.docs[index]
+                                      .data()['precio'],
+                                  cantidad: snapshot.data.docs[index]
+                                      .data()['cantidad'],
+                                  categoria: snapshot.data.docs[index]
+                                      .data()['categoria']));
+                            },
+                          );
+                        },
+                      ),
+                    )
+                  ]);
+                });
           },
         ),
       ),
