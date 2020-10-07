@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:supermarket/src/services/authentication_service.dart';
 
@@ -59,6 +60,7 @@ class LoginPage extends StatelessWidget {
         onPressed: () {
           context.read<AuthenticationService>().signIn(
               email: emailController.text, password: passwordController.text);
+          Navigator.pushReplacementNamed(context, Homepage.route);
         },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),

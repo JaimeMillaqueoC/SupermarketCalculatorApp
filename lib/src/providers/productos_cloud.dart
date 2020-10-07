@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:supermarket/src/model/Producto.dart';
+import 'package:supermarket/src/mywidgets/previo_Card.dart';
 
 class ProductosCloud {
   static final ProductosCloud _instancia = ProductosCloud._privado();
@@ -8,13 +9,11 @@ class ProductosCloud {
   factory ProductosCloud() {
     return _instancia;
   }
-  Future<void> addProductos(Map newProducto) {
+  Future<void> addProductos({Map newProducto, String collection}) {
     CollectionReference users =
-        FirebaseFirestore.instance.collection('productos');
-    // Call the user's CollectionReference to add a new user
+        FirebaseFirestore.instance.collection(collection);
     return users
         .add(newProducto)
-        .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
@@ -54,5 +53,22 @@ class ProductosCloud {
     CollectionReference productos =
         FirebaseFirestore.instance.collection('productos');
     return productos.doc(p.id).delete();
+  }
+
+  Future<void> eliminarProductoPrevio(PrevioCard pc) {
+    CollectionReference productos =
+        FirebaseFirestore.instance.collection('productosPrevios');
+    return productos.doc(pc.id).delete();
+  }
+
+  Future<void> setCheck({String id, bool state}) {
+    CollectionReference productos =
+        FirebaseFirestore.instance.collection('productosPrevios');
+    return productos
+        .doc(id)
+        .update({'check': state})
+        .then((value) => print("Producto actualizado"))
+        .catchError((error) =>
+            print("No se ha podido actualizar el usuario debido a $error"));
   }
 }
