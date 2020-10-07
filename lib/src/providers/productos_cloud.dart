@@ -53,6 +53,15 @@ class ProductosCloud {
   Future<void> eliminarProducto(Producto p) {
     CollectionReference productos =
         FirebaseFirestore.instance.collection('productos');
+    Query productosFiltrados = FirebaseFirestore.instance
+                      .collection('productosPrevios')
+                      .where('nombre',
+                          isEqualTo: p.nombre);
+    var a = productosFiltrados.snapshots().listen((data) {data.docs.map((DocumentSnapshot document) {
+      setCheck(id: document.id,state: false);
+      print(document.id);
+    }).toList();});
+    print(a);
     return productos.doc(p.id).delete();
   }
 

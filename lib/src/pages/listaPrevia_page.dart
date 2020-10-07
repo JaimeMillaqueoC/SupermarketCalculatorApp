@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
 import 'package:supermarket/src/pages/drawer_page.dart';
@@ -16,21 +15,10 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
 
   @override
   void initState() {
-     
     super.initState();
-    setFalse();
   }
 
-  void setFalse(){
-    CollectionReference todo =
-        FirebaseFirestore.instance.collection('productosPrevios');
-        StreamSubscription<QuerySnapshot> streamSub = todo.snapshots().listen((data) {
-        data.documentChanges.forEach((change) {
-          print(change);
-  });
-      });
-      streamSub.cancel();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,28 +88,15 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
     List<PrevioCard> listaCheck = [];
     CollectionReference todo =
         FirebaseFirestore.instance.collection('productos');
-   CollectionReference users = FirebaseFirestore.instance.collection('productosPevios');
     
     List<PrevioCard> lis = snapshot.data.docs.map((DocumentSnapshot document) {
-     //ProductosCloud().setCheck(id: document.id,state: false);
       todo.snapshots().listen((data) {
-        for(QueryDocumentSnapshot element in data.documents){
+        data.documents.forEach((element) {
           if (element['nombre'].toString().toLowerCase() ==
               document.data()['nombre'].toString().toLowerCase()) {
             ProductosCloud().setCheck(id: document.id,state: true);
-            break;
-            //print(element['nombre'].toString().toLowerCase());
           }
-        }
-        /*data.documents.forEach((element) {
-          if (element['nombre'].toString().toLowerCase() ==
-              document.data()['nombre'].toString().toLowerCase()) {
-            ProductosCloud().setCheck(id: document.id,state: true);
-            //print(element['nombre'].toString().toLowerCase());
-          }else{
-            ProductosCloud().setCheck(id: document.id,state: false);
-          }
-        });*/
+        });
       });
       return PrevioCard(
         id: document.id,
