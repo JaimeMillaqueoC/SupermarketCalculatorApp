@@ -96,7 +96,6 @@ class ListaPreviaPageState extends State<ListaPreviaPage> {
           if (element['nombre'].toString().toLowerCase() ==
               document.data()['nombre'].toString().toLowerCase()) {
             ProductosCloud().setCheck(id: document.id,state: true);
-            print(element['nombre'].toString().toLowerCase());
           }
         });
       });
